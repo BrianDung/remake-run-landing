@@ -28,7 +28,8 @@
     "doc:generate": "npx compodoc -p tsconfig.json",
     "prepare": "husky install",
     "pre-commit": "lint-staged",
-    "seed-countries": "ts-node -r tsconfig-paths/register src/data-seed/seed.ts"
+    "seed-countries": "ts-node -r tsconfig-paths/register src/data-seed/seed.ts",
+    "docker-log": "docker logs -f remake-run-landing_app_1"
   },
   "lint-staged": {
     "**/*.ts": [

@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
 import { countries } from 'src/data-seed/countries';
+import { PaginationParamsDto } from 'src/shared/dtos/pagination-params.dto';
 
 import { CountryRepository } from './countries.repository';
+import { CountryDto } from './dto/country.dto';
 import { CreateCountryDto } from './dto/create-country.dto';
 import { UpdateCountryDto } from './dto/update-country.dto';
 
@@ -12,8 +15,19 @@ export class CountriesService {
     return this.countryRepository.saveCountry(createCountryDto);
   }
 
-  findAll() {
-    return countries as any;
+  async findAll(query: PaginationParamsDto) {
+    const [data, count] = await this.countryRepository.findAndCount({
+      where: {},
+      take: query.limit,
+      skip: query.offset,
+    });
+    const countryOutput = plainToClass(CountryDto, data, {
+      excludeExtraneousValues: true,
+    });
+    return {
+      data: countryOutput,
+      count,
+    };
   }
 
   findOne(id: number) {
@@ -29,7 +43,6 @@ export class CountriesService {
   }
 
   async createMutipleContries(): Promise<boolean> {
-    console.log('go');
     const promise = countries.map((item, index) =>
       this.create({
         ...item,
@@ -38,10 +51,8 @@ export class CountriesService {
     );
     try {
       const result = await Promise.all(promise);
-      console.log('RESULT CREATE MULTIPLE', result);
       return true;
     } catch (error) {
-      console.log(error);
       return false;
     }
   }

@@ -7,12 +7,14 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   BaseApiResponse,
   SwaggerBaseApiResponse,
 } from 'src/shared/dtos/base-api-response.dto';
+import { PaginationParamsDto } from 'src/shared/dtos/pagination-params.dto';
 import { ReqContext } from 'src/shared/request-context/req-context.decorator';
 import { RequestContext } from 'src/shared/request-context/request-context.dto';
 
@@ -38,10 +40,15 @@ export class CountriesController {
     status: HttpStatus.OK,
     type: SwaggerBaseApiResponse([CountryDto]),
   })
-  findAll(
+  async findAll(
     @ReqContext() ctx: RequestContext,
+    @Query() query: PaginationParamsDto,
   ): Promise<BaseApiResponse<CountryDto[]>> {
-    return this.countriesService.findAll();
+    const { data, count } = await this.countriesService.findAll(query);
+    return {
+      data,
+      meta: { count },
+    };
   }
 
   @Get(':id')
