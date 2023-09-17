@@ -21,13 +21,14 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json --runInBand",
-    "migration:generate": "ts-node node_modules/.bin/typeorm migration:generate",
+    "migration:generate": "ts-node node_modules/.bin/typeorm migration:generate -n CreateCountries",
     "migration:run": "ts-node node_modules/.bin/typeorm migration:run",
     "migration:revert": "ts-node node_modules/.bin/typeorm migration:revert",
     "doc:serve": "npx compodoc -p tsconfig.json -w -s -r 8001",
     "doc:generate": "npx compodoc -p tsconfig.json",
     "prepare": "husky install",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "seed-countries": "ts-node -r tsconfig-paths/register src/data-seed/seed.ts"
   },
   "lint-staged": {
     "**/*.ts": [
